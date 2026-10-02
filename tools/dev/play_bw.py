@@ -6,7 +6,7 @@ STATE = 0x80005C00
 def feed(g, h, l=(128 << 24) | (128 << 16)):
     g.write_mem(STATE + 0x20, struct.pack('>II', 0x00800000 | h, l))
 
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 g = d.start()
 out = sys.argv[2]
 try:

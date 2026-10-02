@@ -13,7 +13,7 @@ def feed(g, h=0, stick=(128, 128), cstick=(128, 128)):
     hh = 0x00800000 | h | (stick[0] << 8) | stick[1]
     ll = (cstick[0] << 24) | (cstick[1] << 16)
     g.write_mem(STATE + 0x20, struct.pack('>II', hh, ll))
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 g = d.start()
 try:
     g.cont(); time.sleep(float(sys.argv[3]))

@@ -2,7 +2,7 @@
 import struct, sys, time
 from dolphin_run import Dolphin
 STATE = 0x80005C00
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 g = d.start()
 u32 = lambda a: struct.unpack('>I', g.read_mem(a, 4))[0]
 def feed(h=0, stick=(128,128), cstick=(128,128)):

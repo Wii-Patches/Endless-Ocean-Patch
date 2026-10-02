@@ -1,7 +1,7 @@
 """Read interrupt / SI / VI registers of a running image (dev only): hwregs.py image seconds"""
 import struct, sys, time
 from dolphin_run import Dolphin
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 g = d.start()
 def rd(a):
     try: return struct.unpack('>I', g.read_mem(a, 4))[0]

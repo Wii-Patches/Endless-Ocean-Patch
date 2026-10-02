@@ -76,11 +76,19 @@ def run_patch(image_path, log, done, which=('cc', 'gc', 'sd'), ios=None):
                 raise RuntimeError('could not read sys/boot.bin from the extracted disc')
             disc_id, disc_ver = got
             if disc_id not in REGIONS or REGIONS[disc_id]['version'] != disc_ver:
-                raise RuntimeError('%s v%d is not an Excite Truck release this patcher knows.\n\n'
+                raise RuntimeError('%s v%d is not an Endless Ocean release this patcher knows.\n\n'
                                    'Supported: %s' % (disc_id, disc_ver, ', '.join(
-                                       '%s (%s)' % (k, v['short']) for k, v in REGIONS.items())))
+                                       '%s (%s)' % (k, v['label']) for k, v in REGIONS.items())))
             region = disc_id
             log('disc: %s (%s)' % (region, REGIONS[region]['label']))
+
+            # Each game needs a different set: Blue World already plays with a Classic
+            # Controller and already reads SDHC cards, Endless Ocean needs both added.
+            for name in list(which):
+                if not features.available(name, region):
+                    log('%s: %s' % (features.TITLES[name], features.WHY_NOT.get(
+                        (name, REGIONS[region]['game']), 'not available for this release')))
+                    which.remove(name)
 
             dol_path = find_file(fst, 'main.dol')
             if not dol_path or os.path.basename(os.path.dirname(dol_path)) != 'sys':
@@ -99,6 +107,8 @@ def run_patch(image_path, log, done, which=('cc', 'gc', 'sd'), ios=None):
                     raise RuntimeError('the main.dol does not match the retail %s (%s) -- already modified '
                                        'by something else, or not an unmodified dump. Not patching it.'
                                        % (REGIONS[region]['label'], features.TITLES[name]))
+            if 'sd' not in which:
+                ios = None                       # only the SD patch needs a different IOS
             want_ios = ios is not None and ios != _disc_ios(wit, image_path)
             if not todo and not want_ios:
                 raise RuntimeError('nothing left to add: the selected patches are already in this disc.')

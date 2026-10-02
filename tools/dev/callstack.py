@@ -1,7 +1,7 @@
 """Sample the PPC call stack a few times (dev only): callstack.py image seconds-before samples"""
 import struct, sys, time
 from dolphin_run import Dolphin
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 g = d.start()
 def regs():
     r = g.cmd('g'); return [int(r[i*8:(i+1)*8], 16) for i in range(len(r)//8)]

@@ -17,6 +17,11 @@ TITLES = {
     'gc': 'GameCube controller',
     'sd': 'SDHC card support',
 }
+# Why a feature is not offered for a game (shown in the log instead of an error)
+WHY_NOT = {
+    ('cc', 'bw'): 'Blue World already plays with a Classic Controller, nothing to add',
+    ('sd', 'bw'): 'Blue World already reads SDHC cards (with its own IOS 56), nothing to add',
+}
 # What each feature is, for the GUI's checkbox labels
 BLURBS = {
     'cc': 'Classic Controller support',

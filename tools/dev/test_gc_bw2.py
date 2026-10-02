@@ -27,7 +27,7 @@ def names(m):
 
 
 def main():
-    d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+    d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
     g = d.start()
     try:
         g.cont()

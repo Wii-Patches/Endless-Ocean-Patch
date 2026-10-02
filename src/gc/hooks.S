@@ -111,6 +111,19 @@ _entry:
     mtctr   12
     bctr
 1:  DISP_SCENE
+#elif defined(HOOK_DPD)
+    # WPAD's "is the IR camera enabled" query: yes, for the pad (returns 1)
+    SAVE
+    bl      gc_dpd
+    stw     3, 0x08(1)
+    RESTORE_ALL
+    lwz     0, 0x08(1)
+    addi    1, 1, 0x70
+    cmpwi   0, 0
+    beq     1f
+    li      3, 1
+    blr
+1:  DISP_DPD
 #elif defined(HOOK_INFO) || defined(HOOK_INFOASYNC)
     # WPADGetInfo(chan, &info) / WPADGetInfoAsync(chan, &info, cb): answer for the
     # pad ourselves while no real Wii Remote is connected (returns 0 = no error)

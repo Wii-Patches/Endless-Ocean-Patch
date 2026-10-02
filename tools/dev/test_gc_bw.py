@@ -19,7 +19,7 @@ def u32(g, a):
 def main():
     image = sys.argv[1]
     boot = float(sys.argv[2]) if len(sys.argv) > 2 else 45
-    d = Dolphin(image, '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+    d = Dolphin(image, '/Users/larsen/eo-work/dolphin-user')
     g = d.start()
     try:
         print('stop reply:', g.cmd('?'))

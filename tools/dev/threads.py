@@ -16,7 +16,7 @@ def sym(ents, a):
     i = bisect.bisect_right([e[0] for e in ents], a) - 1
     return '%s+0x%x' % (ents[i][1], a - ents[i][0]) if i >= 0 else hex(a)
 
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 ents = load_syms(sys.argv[3] if len(sys.argv) > 3 else '')
 g = d.start()
 u32 = lambda a: struct.unpack('>I', g.read_mem(a, 4))[0]

@@ -6,7 +6,7 @@
 Extracts the disc once into <out>.fst (reused), builds the requested features
 straight from src/ (not from tools/prebuilt, so --debug-feed can be used: the
 pad's response is then read from STATE+0x20, which a debugger writes), patches
-sys/main.dol and rebuilds an .iso.
+sys/main.dol and rebuilds an .iso (or a .wbfs when `out` ends in .wbfs: far smaller, use it).
 """
 import os
 import shutil
@@ -42,7 +42,10 @@ def main():
         built.append(mod.build(disc_id, dol, **kw))
     apply_static(dol, built)
     dol.save(dolp)
-    subprocess.check_call(['wit', 'copy', fst, '--dest', out, '--iso', '--overwrite', '-q'])
+    fmt = '--wbfs' if out.endswith('.wbfs') else '--iso'
+    subprocess.check_call(['wit', 'copy', fst, '--dest', out, fmt, '--overwrite', '-q'])
+    if '--keep-fst' not in sys.argv:
+        shutil.rmtree(fst, ignore_errors=True)       # a whole extracted disc is a gigabyte
     print('built', out, disc_id, feats, 'debug-feed' if debug else '')
 
 

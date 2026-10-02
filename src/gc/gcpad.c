@@ -182,6 +182,7 @@ static __attribute__((noinline)) u32 cc_buttons(u32 h)
 
 /* KPAD ring: `idx` is the next slot to write, `count` how many are queued; the
  * ring is 16 slots in the channel struct plus an optional extra buffer. */
+#if K_EXTLEN
 static inline u32 ring_len(u8 *k)
 {
     return 16 + *(u32 *)(k + K_EXTLEN);
@@ -191,6 +192,18 @@ static inline u8 *slot(u8 *k, u32 i)
 {
     return i < 16 ? k + K_RING + i * 0x38 : *(u8 **)(k + K_EXTBUF) + (i - 16) * 0x38;
 }
+#else
+/* the older KPAD library: a fixed ring of 16 */
+static inline u32 ring_len(u8 *k)
+{
+    return 16;
+}
+
+static inline u8 *slot(u8 *k, u32 i)
+{
+    return k + K_RING + i * 0x38;
+}
+#endif
 
 static __attribute__((noinline)) void fill_cc(u8 *s, u32 h, u32 l, u32 b)
 {
@@ -296,7 +309,7 @@ u32 gc_probe(u32 chan, u32 *type)
 }
 #endif
 
-#if defined(HOOK_INFO) || defined(HOOK_INFOASYNC)
+#if defined(HOOK_INFO) || defined(HOOK_INFOASYNC) || defined(HOOK_DPD)
 /* The game asks WPAD for the controller's status (battery, extension) before it
  * lets you play, and WPADGetInfo even sleeps until the Wii Remote answers.  A
  * pad has no radio to ask, so answer for it: a full battery, an extension
@@ -312,6 +325,7 @@ static int fake_pad(u32 chan)
     return *(s32 *)(blk + 2236) == -1;
 }
 
+#if defined(HOOK_INFO) || defined(HOOK_INFOASYNC)
 static void fill_info(u8 *info)
 {
     u32 *w = (u32 *)info;
@@ -325,6 +339,16 @@ static void fill_info(u8 *info)
     info[0x15] = 1;         /* led */
     info[0x16] = 0;
     info[0x17] = 0;
+}
+#endif
+#endif
+
+#if defined(HOOK_DPD)
+/* The game checks that the IR camera is enabled before it trusts the pointer
+ * (the pad has no camera, but its pointer is made up from the sticks) */
+u32 gc_dpd(u32 chan)
+{
+    return fake_pad(chan);
 }
 #endif
 

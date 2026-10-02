@@ -1,7 +1,7 @@
 """Find instances of the pad classes in RAM (dev only): findobj.py image boot"""
 import struct, sys, time
 from dolphin_run import Dolphin
-d = Dolphin(sys.argv[1], '/Volumes/SSD/larsen/claude-tmp/eo/dolphin-user')
+d = Dolphin(sys.argv[1], '/Users/larsen/eo-work/dolphin-user')
 g = d.start()
 try:
     g.cont(); time.sleep(float(sys.argv[2])); g.interrupt()

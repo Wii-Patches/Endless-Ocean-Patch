@@ -80,6 +80,8 @@ class Dolphin:
                 self.proc.wait(10)
             except Exception:
                 self.proc.kill()
+        # the user folder grows into gigabytes of shader cache: never leave it behind
+        shutil.rmtree(self.user, ignore_errors=True)
 
 
 def shot(path, owner='Dolphin'):
