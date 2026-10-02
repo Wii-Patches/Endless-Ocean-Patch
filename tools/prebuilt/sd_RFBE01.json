@@ -1,0 +1,153 @@
+{
+ "feature": "sd",
+ "title": "SDHC card support",
+ "region": "RFBE01",
+ "ops": [
+  {
+   "t": "blob",
+   "addr": 2147506368,
+   "data": "3ec0800062d6593082d600002c160000418200087c8023787c0400404e800020",
+   "note": "helper1: SDHC block offsets pass the alignment check"
+  },
+  {
+   "t": "blob",
+   "addr": 2147506400,
+   "data": "3f00800063185930831800002c1800004182000c7cb92b78480000087f2531d6548006ff4e800020",
+   "note": "helper2: sector -> block address"
+  },
+  {
+   "t": "blob",
+   "addr": 2147506440,
+   "data": "3c60800060635930806300002c0300004182000c3b390001480000087f39ba144e800020",
+   "note": "helper3: advance one block"
+  },
+  {
+   "t": "blob",
+   "addr": 2147506480,
+   "data": "00000000",
+   "note": "FLAG: 1 = SDHC card in the slot"
+  },
+  {
+   "t": "patch",
+   "addr": 2151019100,
+   "new": "4bca6665",
+   "orig": "7c040040",
+   "note": "read_chk -> bl helper"
+  },
+  {
+   "t": "patch",
+   "addr": 2151019928,
+   "new": "4bca6329",
+   "orig": "7c040040",
+   "note": "write_chk -> bl helper"
+  },
+  {
+   "t": "patch",
+   "addr": 2151116976,
+   "new": "4bc8e831",
+   "orig": "7f2531d6",
+   "note": "read_mul -> bl helper"
+  },
+  {
+   "t": "patch",
+   "addr": 2151117484,
+   "new": "4bc8e635",
+   "orig": "7f2531d6",
+   "note": "write_mul -> bl helper"
+  },
+  {
+   "t": "patch",
+   "addr": 2151117308,
+   "new": "4bc8e70d",
+   "orig": "7f39ba14",
+   "note": "read_add -> bl helper"
+  },
+  {
+   "t": "patch",
+   "addr": 2151117816,
+   "new": "4bc8e511",
+   "orig": "7f39ba14",
+   "note": "write_add -> bl helper3"
+  },
+  {
+   "t": "hook",
+   "site": 2151017488,
+   "orig": 740098048,
+   "payload": [
+    1415800830,
+    1015054336,
+    1619286320,
+    2422472704,
+    740098048,
+    0
+   ],
+   "tramp": 2147506496,
+   "note": "ISD_GetDeviceStatus: remember whether the card is SDHC"
+  },
+  {
+   "t": "hook",
+   "site": 2151117992,
+   "orig": 2158034956,
+   "payload": [
+    2153840660,
+    1415774803,
+    1099038760,
+    939524105,
+    2153840652,
+    1415824062,
+    946012161,
+    482542592,
+    1012957239,
+    1617130728,
+    2087256998,
+    1317012512,
+    2158034956,
+    0
+   ],
+   "tramp": 2147506520,
+   "note": "get_total_sectors: CSD v2 capacity"
+  },
+  {
+   "t": "hook",
+   "site": 2151017700,
+   "orig": 952107009,
+   "payload": [
+    952107008,
+    739639296,
+    1099038728,
+    952107009,
+    1610612736,
+    0
+   ],
+   "tramp": 2147506576,
+   "note": "duCommandv: block-count argument"
+  },
+  {
+   "t": "hook",
+   "site": 2151017996,
+   "orig": 2154684828,
+   "payload": [
+    2155610140,
+    738394113,
+    2154684828,
+    1099038772,
+    2147680256,
+    2417557504,
+    2147680260,
+    2417557508,
+    2147680264,
+    2417557512,
+    2147680268,
+    2417557516,
+    1012957238,
+    1617161752,
+    2087256998,
+    1317012512,
+    1610612736,
+    0
+   ],
+   "tramp": 2147506600,
+   "note": "duCommandv: four-word response copy"
+  }
+ ]
+}
