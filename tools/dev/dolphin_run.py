@@ -84,12 +84,16 @@ class Dolphin:
         shutil.rmtree(self.user, ignore_errors=True)
 
 
-def shot(path, owner='Dolphin'):
-    """PNG of the emulator window (not the whole screen)."""
+def shot(path, owner='Dolphin', title='Endless Ocean'):
+    """PNG of this game's emulator window (not the whole screen).
+
+    Several Dolphins may be running (other projects): pick the one whose title names
+    this game, on screen or not."""
     import Quartz
     best = None
-    for w in Quartz.CGWindowListCopyWindowInfo(Quartz.kCGWindowListOptionOnScreenOnly, Quartz.kCGNullWindowID):
-        if w.get('kCGWindowOwnerName') == owner and w.get('kCGWindowLayer') == 0:
+    for w in Quartz.CGWindowListCopyWindowInfo(Quartz.kCGWindowListOptionAll, Quartz.kCGNullWindowID):
+        if w.get('kCGWindowOwnerName') == owner and w.get('kCGWindowLayer') == 0 \
+                and title in (w.get('kCGWindowName') or ''):
             b = w['kCGWindowBounds']
             if best is None or b['Width'] * b['Height'] > best[1]:
                 best = (w['kCGWindowNumber'], b['Width'] * b['Height'])
