@@ -86,5 +86,53 @@ _entry:
     li      3, 0
     blr
 1:  DISP_PROBE
+#elif defined(HOOK_SCENE)
+    # The controller-check scene is about to ask "Use the Classic Controller?".
+    # With a pad plugged in, say yes without asking: run the game's own "use the
+    # Classic Controller" routine, mark the scene finished and leave it.
+    # (r31 = the scene object, a callee-saved register of the scene's function)
+    SAVE
+    bl      gc_present
+    stw     3, 0x08(1)
+    RESTORE_ALL
+    lwz     0, 0x08(1)
+    addi    1, 1, 0x70
+    cmpwi   0, 0
+    beq     1f
+    lis     12, FN_USE_CC@ha
+    addi    12, 12, FN_USE_CC@l
+    mtctr   12
+    bctrl
+    lwz     3, 20(31)
+    li      0, 20
+    sth     0, 0(3)
+    lis     12, SCENE_DONE@ha
+    addi    12, 12, SCENE_DONE@l
+    mtctr   12
+    bctr
+1:  DISP_SCENE
+#elif defined(HOOK_INFO) || defined(HOOK_INFOASYNC)
+    # WPADGetInfo(chan, &info) / WPADGetInfoAsync(chan, &info, cb): answer for the
+    # pad ourselves while no real Wii Remote is connected (returns 0 = no error)
+    SAVE
+#if defined(HOOK_INFO)
+    bl      gc_info
+#else
+    bl      gc_infoasync
+#endif
+    stw     3, 0x08(1)
+    RESTORE_ALL
+    lwz     0, 0x08(1)
+    addi    1, 1, 0x70
+    cmpwi   0, 0
+    beq     1f
+    li      3, 0
+    blr
+1:
+#if defined(HOOK_INFO)
+    DISP_INFO
+#else
+    DISP_INFOASYNC
+#endif
 #endif
     nop

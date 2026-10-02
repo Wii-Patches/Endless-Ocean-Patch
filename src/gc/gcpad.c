@@ -295,3 +295,67 @@ u32 gc_probe(u32 chan, u32 *type)
     return 1;
 }
 #endif
+
+#if defined(HOOK_INFO) || defined(HOOK_INFOASYNC)
+/* The game asks WPAD for the controller's status (battery, extension) before it
+ * lets you play, and WPADGetInfo even sleeps until the Wii Remote answers.  A
+ * pad has no radio to ask, so answer for it: a full battery, an extension
+ * attached.  Only while WPAD itself has no connection on the channel. */
+static int fake_pad(u32 chan)
+{
+    u32 h, l;
+    u8 *blk;
+
+    if (chan || !gc_in(&h, &l))
+        return 0;
+    blk = *(u8 **)(WPAD_TBL + chan * 4);
+    return *(s32 *)(blk + 2236) == -1;
+}
+
+static void fill_info(u8 *info)
+{
+    u32 *w = (u32 *)info;
+
+    w[0] = 0;               /* dpd */
+    w[1] = 0;               /* speaker */
+    w[2] = 1;               /* attach: an extension is plugged in */
+    w[3] = 0;               /* lowBat */
+    w[4] = 0;               /* nearempty */
+    info[0x14] = 4;         /* battery: full */
+    info[0x15] = 1;         /* led */
+    info[0x16] = 0;
+    info[0x17] = 0;
+}
+#endif
+
+#if defined(HOOK_INFO)
+u32 gc_info(u32 chan, u8 *info)
+{
+    if (!info || !fake_pad(chan))
+        return 0;
+    fill_info(info);
+    return 1;
+}
+#endif
+
+#if defined(HOOK_INFOASYNC)
+u32 gc_infoasync(u32 chan, u8 *info, void (*cb)(s32, s32))
+{
+    if (!info || !fake_pad(chan))
+        return 0;
+    fill_info(info);
+    if (cb)
+        cb((s32)chan, 0);
+    return 1;
+}
+#endif
+
+#if defined(HOOK_SCENE)
+/* 1 while a pad answers on port 1 */
+u32 gc_present(void)
+{
+    u32 h, l;
+
+    return gc_in(&h, &l);
+}
+#endif

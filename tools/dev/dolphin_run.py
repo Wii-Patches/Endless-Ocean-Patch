@@ -36,13 +36,14 @@ UsePanicHandlers = False
 Fullscreen = False
 RenderToMain = False
 """
-WIIMOTE_INI = "[Wiimote1]\nSource = {src}\n"
+WIIMOTE_INI = "[Wiimote1]\nSource = {src}\nExtension = {ext}\n"
 
 
 class Dolphin:
-    def __init__(self, image, user, si0=0, sd=False, sdpath='', wiimote=0, speed=1.0, extra_ini=''):
+    def __init__(self, image, user, si0=int(os.environ.get('EO_SI0', 0)), sd=False, sdpath='', wiimote=int(os.environ.get('EO_WIIMOTE', 0)), wiimote_ext=os.environ.get('EO_WIIEXT', 'None'), speed=1.0, extra_ini=''):
         self.image, self.user = image, user
         self.si0, self.sd, self.sdpath, self.wiimote, self.speed = si0, sd, sdpath, wiimote, speed
+        self.wiimote_ext = wiimote_ext
         self.extra_ini = extra_ini
         self.proc = None
 
@@ -53,7 +54,7 @@ class Dolphin:
             f.write(DOLPHIN_INI.format(si0=self.si0, sd=str(self.sd), sdpath=self.sdpath, speed=self.speed)
                     + self.extra_ini)
         with open(os.path.join(self.user, 'Config', 'WiimoteNew.ini'), 'w') as f:
-            f.write(WIIMOTE_INI.format(src=self.wiimote))
+            f.write(WIIMOTE_INI.format(src=self.wiimote, ext=self.wiimote_ext))
         for n in ('GFX.ini',):
             p = os.path.join(HOME, 'Config', n)
             if os.path.exists(p):
