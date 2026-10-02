@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Command-line twin of the GUI: patch a .wbfs/.iso in place.
 
-    python3 tools/patch_disc.py "Excite Truck (USA).wbfs" --cc --gc --sd --ios 58
+    python3 tools/patch_disc.py "Endless Ocean (USA).wbfs" --cc --gc --sd --ios 58
 """
 import argparse
 import os

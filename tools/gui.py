@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Drag-and-drop patcher: drop an Excite Truck disc image on the window, done.
+"""Drag-and-drop patcher: drop an Endless Ocean or Blue World disc image on the window, done.
 
 Extracts the disc, patches its own main.dol for the options you tick, and
 rebuilds the image in the same format.  The rebuilt image replaces the original
@@ -47,20 +47,22 @@ class App(BASE):
             tk.Label(self, image=self.logo).pack(pady=(10, 0))
         except Exception:                              # the window is fine without its logo
             pass
-        tk.Label(self, text='Excite Truck  -  USA / Europe / Japan',
+        tk.Label(self, text='Endless Ocean  -  Endless Ocean: Blue World',
                  font=('Helvetica', 12, 'bold')).pack(pady=(4, 6))
 
         opts = tk.LabelFrame(self, text='Patches')
         opts.pack(fill='x', padx=10)
         self.cc = tk.BooleanVar(value=True)
-        tk.Checkbutton(opts, text='Classic Controller', variable=self.cc).pack(anchor='w')
+        tk.Checkbutton(opts, text='Classic Controller  (Endless Ocean; Blue World has it built in)',
+                       variable=self.cc).pack(anchor='w')
         self.gc = tk.BooleanVar(value=True)
-        tk.Checkbutton(opts, text='GameCube controller (port 1)', variable=self.gc).pack(anchor='w')
+        tk.Checkbutton(opts, text='GameCube controller (port 1)  (both games)',
+                       variable=self.gc).pack(anchor='w')
         self.sd = tk.BooleanVar(value=True)
-        tk.Checkbutton(opts, text='SDHC card support (custom soundtrack from cards over 2 GB)',
+        tk.Checkbutton(opts, text='SDHC card support  (Endless Ocean; Blue World has it built in)',
                        variable=self.sd, command=self.sync_ios).pack(anchor='w')
         self.ios = tk.BooleanVar(value=True)
-        self.ios_cb = tk.Checkbutton(opts, text='    ... and make the disc ask for IOS 58 (a real Wii needs this for SDHC)',
+        self.ios_cb = tk.Checkbutton(opts, text='    ... and make the disc ask for IOS 58 (a real Wii needs this for SDHC in Endless Ocean)',
                                      variable=self.ios)
         self.ios_cb.pack(anchor='w')
 
